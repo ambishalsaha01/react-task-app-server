@@ -17,16 +17,26 @@ async function run() {
         await client.connect();
         const taskCollection = client.db('todo_Task').collection('task');
 
-        // 
-        
+        // Get Task Data
+        app.get('/task', async (req, res) => {
+            const cursor = taskCollection.find({});
+            const tasks = await cursor.toArray();
+            res.send(tasks);
+        });
 
+        // Post Task Data
+        app.post('/task', async (req, res) => {
+            const newTask = req.body;
+            const result = await taskCollection.insertOne(newTask);
+            res.json(result)
+        });
 
     }
     finally {
 
     }
 }
-
+run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
