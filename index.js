@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 
@@ -30,6 +30,14 @@ async function run() {
             const result = await taskCollection.insertOne(newTask);
             res.json(result)
         });
+
+        // Get individual task data
+        app.get('/task/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await taskCollection.findOne(query);
+            res.send(result);
+        })
 
     }
     finally {
